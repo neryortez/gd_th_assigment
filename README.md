@@ -40,3 +40,10 @@ await new CSVProcessor({
 The file would be fetch and processed when the `process` method is called.
 
 When the file finished processing, the `AfterProcessedHook` will be executed with the result of the transformations.
+
+Open source dependencies
+=
+This project depends on the following:
+ - `Typescript` To write strongly typed code and facilitate catch bugs on development
+ - `ts-node` To facilitate the execution of the TypeScript code.
+ - `node-fetch` It helps fetching resources on the Internet. This way we avoid a lot of boilerplate code.
