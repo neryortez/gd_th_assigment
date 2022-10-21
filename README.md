@@ -4,10 +4,13 @@ This is the solution to the NodeJS challenge by Encora.
 
 Functional Requirements
 =
-| Requirement                                                                             | How to use |
-|-----------------------------------------------------------------------------------------|------------|
-| Takes a CSV file destination as an input. The input can be a URL or file on the machine |            |
-| Allows the consumer to pass a transformer function that will run for each row of        |            |
+| Requirement                                                                              | How to use                                                                                                                                            |
+|------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Takes a CSV file destination as an input. The input can be a URL or file on the machine  | Create an instance of `CSVProcessor` class and pass the config argument specifying the path or url                                                    |
+| Allows the consumer to pass a transformer function that will run for each row of the CSV | Use the `addTransformer` method to pass a transformer function. You can add more than one transformer.                                                |
+| Add ability to run a hook before the file is read.                                       | Use the `addBeforeProcessHook` method to pass a hook that will receive the raw data before the transformations are applied.                           |
+| Add ability to run a hook after the file is processed.                                   | Use the `addAfterProcessed` method to pass a hook that will receive the transformed data.                                                             |
+| Capture the time it takes for the file to get processed.                                 | The `process` method by default prints the time it took parse the file and run the hooks and transformations. Time to fetch/open the file is ignored. |
 
 
 How to run the project
