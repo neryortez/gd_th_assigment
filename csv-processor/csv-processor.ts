@@ -37,7 +37,7 @@ export class CSVProcessor<T = string[]> {
         return this;
     }
 
-    async process() {
+    async process(): Promise<T[]> {
         let rawStrings = await this.getRawData();
 
         let rows = CSVParser(rawStrings, this.config.delimeter || ', ');
@@ -50,17 +50,17 @@ export class CSVProcessor<T = string[]> {
             rows = rows.splice(1);
         }
 
-        rows = this.transformers.reduce((prev, curr) => {
+        const result: T[] = this.transformers.reduce((prev: T[], curr: Transformer<T, T>) => {
             return prev.map(row => {
                 return curr(row);
             });
-        }, rows);
+        }, rows as T[]);
 
-        if(this.afterProcessedHook) {
+        if (this.afterProcessedHook) {
             this.afterProcessedHook(rows as any[]);
         }
 
-        return rows;
+        return result;
     }
   
 
