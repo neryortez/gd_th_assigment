@@ -9,7 +9,6 @@ async function main() {
     console.log(" ==== [Power of 3 of extracted numbers in a CSV file] =====");
     await new CSVProcessor({
         file: './assets/test.csv',
-        // skipHeader: true,
     })
         .addTransformer(getFirstNumber)
         .addTransformer(powerOf(3))
@@ -23,17 +22,6 @@ async function main() {
         skipHeader: true,
     })
         .addTransformer(numberConverter)
-        .addTransformer(powerOf(2))
-        .addAfterProcessed(consoleHook)
-        .process();
-
-    
-    console.log(" ==== [Power of 2 of extracted numbers in a CSV file] =====");
-    await new CSVProcessor<string[]>({
-        file: './assets/test.csv',
-        // skipHeader: true,
-    })
-        .addTransformer(getFirstNumber)
         .addTransformer(powerOf(2))
         .addAfterProcessed(consoleHook)
         .process();
