@@ -4,12 +4,14 @@ import { AfterFileProcessedHook } from "./interfaces/after-file-processed-hook.i
 import { CSVParser } from "./utils/csv-parser";
 import { fetchUrlRawString } from "./utils/fetch-file";
 import { getStringFromFile } from "./utils/get-string-from-file";
+import { BeforeHook } from "./interfaces/before-hook.interface";
+import { PristineProcessor, ProcessableTransformable, TransformableProcessor } from "./interfaces/PristineProcessor";
 
-export class CSVProcessor<T = string[]> {
+export class CSVProcessor<T = string[]> implements PristineProcessor<T> {
 
     private transformers: Transformer<any, any>[] = [];
     private afterProcessedHook?: AfterFileProcessedHook<T>;
-    private beforeProcessHook?: (data: string[][]) => void;
+    private beforeProcessHook?: BeforeHook<any, any>;
   
     constructor(private config: ProcessorConfig) {
         if (!config) {
@@ -18,23 +20,23 @@ export class CSVProcessor<T = string[]> {
     }
 
     /**
-     * Adds a hook that is going to be executed before the file is read.
-     * Changes to the provided raw data doesn't affect the rows processed in the transformers
-     * @param hook Hook that accepts the raw rows. 
+     * Adds a hook that is going to be executed before the list of transformers are executed.
+     * Can be used to transform the whole data at once before runing the transformers.
+     * @param hook Hook that accepts the list of rows. 
      */
-    addBeforeProcessHook(hook: (data: string[][]) => void) {
+    addBeforeProcessHook<R>(hook: BeforeHook<T[], R>) {
         this.beforeProcessHook = hook;
-        return this;
+        return this as unknown as TransformableProcessor<R>;
     }
     
-    addTransformer<R>(transformerFn: Transformer<T, R>): CSVProcessor<R> {
+    addTransformer<R>(transformerFn: Transformer<T, R>) {
         this.transformers.push(transformerFn);
-        return this as unknown as CSVProcessor<R>;
+        return this as unknown as TransformableProcessor<R>;
     }
 
     addAfterProcessed(hook: AfterFileProcessedHook<T>) {
         this.afterProcessedHook = hook;
-        return this;
+        return this as ProcessableTransformable<T>;
     }
 
     async process(): Promise<T[]> {
@@ -42,12 +44,12 @@ export class CSVProcessor<T = string[]> {
 
         let rows = CSVParser(rawStrings, this.config.delimeter || ', ');
 
-        if (this.beforeProcessHook) {
-            this.beforeProcessHook(rows);
-        }
-
         if (this.config.skipHeader) {
             rows = rows.splice(1);
+        }
+
+        if (this.beforeProcessHook) {
+            rows = this.beforeProcessHook(rows);
         }
 
         const result: T[] = this.transformers.reduce((prev: T[], curr: Transformer<T, T>) => {
