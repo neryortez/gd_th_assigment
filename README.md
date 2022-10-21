@@ -2,6 +2,13 @@ Description
 =
 This is the solution to the NodeJS challenge by Encora.
 
+Functional Requirements
+=
+| Requirement                                                                             | How to use |
+|-----------------------------------------------------------------------------------------|------------|
+| Takes a CSV file destination as an input. The input can be a URL or file on the machine |            |
+| Allows the consumer to pass a transformer function that will run for each row of        |            |
+
 
 How to run the project
 =

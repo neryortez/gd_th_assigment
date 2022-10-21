@@ -3,6 +3,7 @@ import { CSVProcessor } from "./csv-processor/csv-processor";
 import { getFirstNumber } from "./transformers/getFirstNumber";
 import { numberConverter } from "./transformers/numberConverter";
 import { parseNumbers } from "./transformers/parseNumbers";
+import { getOne } from "./transformers/getOne";
 import { powerOf } from "./transformers/powerOf";
 import { getHeaders } from "./hooks/get-headers.before-hook";
 
@@ -18,17 +19,18 @@ async function main() {
 
 
     console.log(" ==== [Square of numbers in a CSV file] =====");
-    await new CSVProcessor<string>({
+    await new CSVProcessor({
         file: './assets/numbers.csv',
         skipHeader: true,
     })
+        .addTransformer(getOne(0))
         .addTransformer(numberConverter)
         .addTransformer(powerOf(2))
         .addAfterProcessed(consoleHook)
         .process();
 
     console.log(" ==== [Convert the rows in objects with the header] =====");
-    await new CSVProcessor<string>({
+    await new CSVProcessor({
         file: './assets/numbers.csv'
     })
         .addBeforeProcessHook(getHeaders)
