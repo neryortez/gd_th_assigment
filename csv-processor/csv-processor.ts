@@ -42,6 +42,9 @@ export class CSVProcessor<T = string[]> implements PristineProcessor<T> {
     async process(): Promise<T[]> {
         let rawStrings = await this.getRawData();
 
+        const TIME_LABEL = 'CSV processed';
+        console.time(TIME_LABEL);
+
         let rows = CSVParser(rawStrings, this.config.delimeter || ', ');
 
         if (this.config.skipHeader) {
@@ -59,8 +62,10 @@ export class CSVProcessor<T = string[]> implements PristineProcessor<T> {
         }, rows as T[]);
 
         if (this.afterProcessedHook) {
-            this.afterProcessedHook(rows as any[]);
+            this.afterProcessedHook(result as any[]);
         }
+
+        console.timeEnd(TIME_LABEL);
 
         return result;
     }
