@@ -47,3 +47,19 @@ This project depends on the following:
  - `Typescript` To write strongly typed code and facilitate catch bugs on development
  - `ts-node` To facilitate the execution of the TypeScript code.
  - `node-fetch` It helps fetching resources on the Internet. This way we avoid a lot of boilerplate code.
+
+Pros and Cons
+=
+Method Chaining
+-
+The current implementation uses the method chaining pattern to facilitate adding transformers to the CSVProcessor.
+
+Also, it leverages the type-checking from TypeScript to validate the types of the transformations in the chain.
+
+In other words, we can check if "`transformerB`" is compatible with the transformation result of "`transformerA`". For example if `transformerB` expects that each row contains just one element, the compiler will warns us if `transformerA` return a list of more than one element; 
+
+Own implementation of CSV parsing
+-
+The current implementation parses the CSV string in its own. It is a simple implementation that relays on the transformers to provide functions like mapping and header extractions.
+ 
+Using a open source library like `csv-parser` could provide the developer with more functionality and configurations.
