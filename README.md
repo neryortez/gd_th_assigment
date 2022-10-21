@@ -12,6 +12,7 @@ Functional Requirements
 | Add ability to run a hook after the file is processed.                                   | Use the `addAfterProcessed` method to pass a hook that will receive the transformed data.                                                             |
 | Capture the time it takes for the file to get processed.                                 | The `process` method by default prints the time it took parse the file and run the hooks and transformations. Time to fetch/open the file is ignored. |
 
+A few transformation functions have been provided in the [`transformers`](./transformers) folder. But the consumer can write their own transformation functions following the [`Transformer`](./csv-processor/interfaces/transformer.interface.ts) interface.
 
 How to run the project
 =
